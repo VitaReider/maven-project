@@ -1,27 +1,15 @@
 pipeline {
     agent any
-
-    stages {
-        stage ('Compile Stage') {
-
+    stages{
+        stage('Build'){
             steps {
-                // Run the maven build
-                bat "mvn clean compile"
+                bat 'mvn clean package'
             }
-        }
-
-        stage ('Testing Stage') {
-
-            steps {
-                // Run the maven test
-                bat 'mvn test'
-            }
-        }
-
-        stage ('Deployment Stage') {
-            steps {
-                // Run the maven deployment
-                bat 'mvn deploy'
+            post {
+                success {
+                    echo 'Now Archiving...'
+                    archiveArtifacts artifacts: '**/target/*.war'
+                }
             }
         }
     }
